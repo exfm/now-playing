@@ -87,6 +87,7 @@ NowPlaying.prototype.getRequestObj = function(url, context, eventType){
     return {
         'url': url,
         'success': function(data){
+            this.serverSong = data.song;
             this.emit(eventType, this);
         }.bind(this), 
         'type': "POST",
