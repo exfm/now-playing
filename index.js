@@ -68,18 +68,25 @@ NowPlaying.prototype.addListeners = function(){
 }
 
 // xhr object with data we will send to API
-NowPlaying.prototype.getRequestObj = function(url, context, eventType){
+NowPlaying.prototype.getRequestObj = function(url, eventType){
     if (this.song.id){
         url = url+"/"+this.song.id;
     }
-    var data = {
-        'title': this.song.title,
-        'artist': this.song.artist,
-        'album': this.song.album,
-        'source': this.song.source
+    var data = {};
+    if (this.song.title){
+        data.title = this.song.title;
     }
-    if (context){
-        data.context = context;
+    if (this.song.artist){
+        data.artist = this.song.artist;
+    }
+    if (this.song.album){
+        data.album = this.song.album;
+    }
+    if (this.song.source){
+        data.source = this.song.source;
+    }
+    if (this.song.context){
+        data.context = this.song.context;
     }
     if (this.clientId){
         data.client_id = this.clientId;
@@ -96,42 +103,40 @@ NowPlaying.prototype.getRequestObj = function(url, context, eventType){
 }
 
 // listener for when song starts
-NowPlaying.prototype.onStart = function(e, context){
-    this.start(e.target.song, context);
+NowPlaying.prototype.onStart = function(e){
+    this.start(e.target.song);
 }
 
 // manually call this when song starts (if listener is not on)
-NowPlaying.prototype.start = function(song, context){
+NowPlaying.prototype.start = function(song){
     this.song = song;
     this.setTitle();
     $.ajax(
         this.getRequestObj(
             this.nowPlayingUrl, 
-            context, 
             "start"
         )
     );
 }
 
 // listener for when song reaches halfway mark
-NowPlaying.prototype.onHalf = function(e, context){
-    this.half(e.target.song, context);
+NowPlaying.prototype.onHalf = function(e){
+    this.half(e.target.song);
 }
 
 // manually call this when song reaches halfway mark (if listener is not on)
-NowPlaying.prototype.half = function(song, context){
+NowPlaying.prototype.half = function(song){
     this.song = song;
     $.ajax(
         this.getRequestObj(
-            this.scrobbleUrl, 
-            context, 
+            this.scrobbleUrl,  
             "half"
         )
     );
 }
 
 // when PlayQueue fires 'stop' event, set page title back to original state
-NowPlaying.prototype.onStop = function(e, context){
+NowPlaying.prototype.onStop = function(e){
     if (this.pageTitle){
         this.title = this.pageTitle;
     }
