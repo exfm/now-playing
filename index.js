@@ -111,12 +111,20 @@ NowPlaying.prototype.onStart = function(e){
 NowPlaying.prototype.start = function(song){
     this.song = song;
     this.setTitle();
-    $.ajax(
-        this.getRequestObj(
-            this.nowPlayingUrl, 
-            "start"
-        )
+    var requestObj = this.getRequestObj(
+        this.nowPlayingUrl, 
+        'start'
     );
+    if(navigator.onLine === true){
+        $.ajax(
+            requestObj
+        );
+    }
+    else{
+        requestObj.success({
+            'song': this.song 
+        });
+    }
 }
 
 // listener for when song reaches halfway mark
@@ -127,12 +135,20 @@ NowPlaying.prototype.onHalf = function(e){
 // manually call this when song reaches halfway mark (if listener is not on)
 NowPlaying.prototype.half = function(song){
     this.song = song;
-    $.ajax(
-        this.getRequestObj(
-            this.scrobbleUrl,  
-            "half"
-        )
+    var requestObj = this.getRequestObj(
+        this.scrobbleUrl, 
+        'half'
     );
+    if(navigator.onLine === true){
+        $.ajax(
+            requestObj
+        );
+    }
+    else{
+        requestObj.success({
+            'song': this.song 
+        });
+    }
 }
 
 // when PlayQueue fires 'stop' event, set page title back to original state
