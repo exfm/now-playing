@@ -51,6 +51,11 @@ NowPlaying.prototype.addListeners = function(){
             this.onStop.bind(this), 
             false
         );
+        this.playQueue.addEventListener(
+            "error", 
+            this.onError.bind(this), 
+            false
+        );
         this.audio = this.playQueue.audio;
     }
     if(this.audio){
@@ -70,7 +75,10 @@ NowPlaying.prototype.addListeners = function(){
 // xhr object with data we will send to API
 NowPlaying.prototype.getRequestObj = function(url, eventType){
     if (this.song.id){
-        url = url+"/"+this.song.id;
+        url = url+'/'+this.song.id;
+        if(eventType === 'error'){
+            url = url+'/error';
+        }
     }
     var data = {};
     if (this.song.title){
@@ -90,6 +98,9 @@ NowPlaying.prototype.getRequestObj = function(url, eventType){
     }
     if (this.clientId){
         data.client_id = this.clientId;
+    }
+    if (this.song.play_token){
+        data.play_token = this.song.play_token;
     }
     return {
         'url': url,
@@ -148,6 +159,32 @@ NowPlaying.prototype.half = function(song){
         requestObj.success({
             'song': this.song 
         });
+    }
+}
+
+// listener for when there is a song load error
+NowPlaying.prototype.onError = function(e){
+    this.error(e.target.song);
+}
+
+// manually call this when there is a song load error
+NowPlaying.prototype.error = function(song){
+    if(song.id){
+        this.song = song;
+        var requestObj = this.getRequestObj(
+            this.errorUrl, 
+            'error'
+        );
+        if(navigator.onLine === true){
+            $.ajax(
+                requestObj
+            );
+        }
+        else{
+            requestObj.success({
+                'song': this.song 
+            });
+        }
     }
 }
 
