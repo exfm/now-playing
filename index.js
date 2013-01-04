@@ -21,6 +21,10 @@ function NowPlaying(opts){
     // current title
     this.title = null;
     
+    // cache offline scrobbles to send 
+    // when we are back online
+    this.offlineScrobbles = [];
+    
     // extend event emitter
     var eventEmitter;
     if(typeof module !== "undefined"){
@@ -69,7 +73,12 @@ NowPlaying.prototype.addListeners = function(){
             this.setTitle.bind(this), 
             false
         );
-    }
+    };
+    document.addEventListener(
+        'online',
+        this.onOnline.bind(this), 
+        false
+    );
 }
 
 // xhr object with data we will send to API
@@ -159,6 +168,7 @@ NowPlaying.prototype.half = function(song){
         requestObj.success({
             'song': this.song 
         });
+        this.offlineScrobbles.push(requestObj);
     }
 }
 
@@ -261,6 +271,23 @@ NowPlaying.prototype.replaceHTMLEncoding = function(str){
     str = str.replace(/&#8230;/g, "...");
     str = str.replace(/&amp;/g, "&");
     return str;
+}
+
+// listener for 'online' event. 
+// Send any un-sent scrobbles
+NowPlaying.prototype.onOnline = function(e){
+    if(navigator.onLine === true){
+        $.each(
+            this.offlineScrobbles,
+            function(index, requestObj){
+                requestObj.success = function(){};
+                $.ajax(
+                    requestObj
+                );
+            }
+        );
+        this.offlineScrobbles = [];
+    }
 }
 
 
