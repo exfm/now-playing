@@ -168,6 +168,7 @@ NowPlaying.prototype.half = function(song){
         requestObj.success({
             'song': this.song 
         });
+        requestObj.data.timestamp = Math.round(new Date().getTime() / 1000);
         this.offlineScrobbles.push(requestObj);
     }
 }
