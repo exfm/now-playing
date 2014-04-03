@@ -2,7 +2,7 @@
   "author": "Dan Kantor <dan@ex.fm>",
   "name": "now-playing",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "http://github.com/exfm/now-playing",
   "repository": {
     "type": "git",

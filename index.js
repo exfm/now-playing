@@ -39,7 +39,7 @@ function NowPlaying(opts){
 
 // add playqueue and audio listeners
 NowPlaying.prototype.addListeners = function(){
-    if (this.playQueue){
+    if(this.playQueue){
         this.playQueue.addEventListener(
             "playing", 
             this.onStart.bind(this), 
@@ -83,32 +83,32 @@ NowPlaying.prototype.addListeners = function(){
 
 // xhr object with data we will send to API
 NowPlaying.prototype.getRequestObj = function(url, eventType){
-    if (this.song.id){
-        url = url+'/'+this.song.id;
+    if(this.song.id){
+        url = url + '/' + this.song.id;
         if(eventType === 'error'){
-            url = url+'/error';
+            url = url + '/error';
         }
     }
     var data = {};
-    if (this.song.title){
+    if(this.song.title){
         data.title = this.song.title;
     }
-    if (this.song.artist){
+    if(this.song.artist){
         data.artist = this.song.artist;
     }
-    if (this.song.album){
+    if(this.song.album){
         data.album = this.song.album;
     }
-    if (this.song.source){
+    if(this.song.source){
         data.source = this.song.source;
     }
-    if (this.song.context){
+    if(this.song.context){
         data.context = this.song.context;
     }
-    if (this.clientId){
+    if(this.clientId){
         data.client_id = this.clientId;
     }
-    if (this.song.play_token){
+    if(this.song.play_token){
         data.play_token = this.song.play_token;
     }
     return {
@@ -201,7 +201,7 @@ NowPlaying.prototype.error = function(song){
 
 // when PlayQueue fires 'stop' event, set page title back to original state
 NowPlaying.prototype.onStop = function(e){
-    if (this.pageTitle){
+    if(this.pageTitle){
         this.title = this.pageTitle;
     }
     else {
@@ -222,32 +222,17 @@ NowPlaying.prototype.getTitle = function(){
 // set the page title. Check if song is playing, paused or stopped
 NowPlaying.prototype.setTitle = function(){
     var title = "";
-    if(this.audio != null){
-        if(this.audio.paused == false){
-            title = "f"; 
-        } 
-    } 
     if(this.song.title){
-        if(this.audio != null){
-            if(this.audio.paused == false){
-                title = "f "+this.song.title;
-            }
-            else{
-                title = this.song.title;
-            }
-        } 
-        else{
-            title = this.song.title;
-        }
+        title = this.song.title;
     }
     if(this.song.artist){
-        title += " by "+this.song.artist;
+        title += " by "+ this.song.artist;
     }
     if(this.pageTitle){
-        title += " - "+this.pageTitle;
+        title += " - " + this.pageTitle;
     }
     this.title = this.replaceHTMLEncoding(title);
-    if(this.shouldSetTitle == true){
+    if(this.shouldSetTitle === true){
         document.title = this.title;
     }
     this.emit('titleChanged', 
