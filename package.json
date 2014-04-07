@@ -1,8 +1,8 @@
 {
   "author": "Dan Kantor <dan@ex.fm>",
   "name": "now-playing",
-  "description": "",
-  "version": "0.0.3",
+  "description": "Now playing sets doc title and submits to a service (scrobbles)",
+  "version": "0.0.4",
   "homepage": "http://github.com/exfm/now-playing",
   "repository": {
     "type": "git",
