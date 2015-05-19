@@ -84,9 +84,9 @@ NowPlaying.prototype.addListeners = function(){
 // xhr object with data we will send to API
 NowPlaying.prototype.getRequestObj = function(url, eventType){
     if (this.song.id){
-        url = url+'/'+this.song.id;
+        url = url + '/' + this.song.id;
         if(eventType === 'error'){
-            url = url+'/error';
+            url = url + '/error';
         }
     }
     var data = {};
@@ -186,19 +186,21 @@ NowPlaying.prototype.onError = function(e){
 NowPlaying.prototype.error = function(song){
     if(song.id){
         this.song = song;
-        var requestObj = this.getRequestObj(
-            this.errorUrl, 
-            'error'
-        );
-        if(navigator.onLine === true){
-            $.ajax(
-                requestObj
+        if(this.errorUrl !== null){
+            var requestObj = this.getRequestObj(
+                this.errorUrl, 
+                'error'
             );
-        }
-        else{
-            requestObj.success({
-                'song': this.song 
-            });
+            if(navigator.onLine === true){
+                $.ajax(
+                    requestObj
+                );
+            }
+            else{
+                requestObj.success({
+                    'song': this.song 
+                });
+            }
         }
     }
 }
@@ -226,29 +228,14 @@ NowPlaying.prototype.getTitle = function(){
 // set the page title. Check if song is playing, paused or stopped
 NowPlaying.prototype.setTitle = function(){
     var title = "";
-    if(this.audio != null){
-        if(this.audio.paused == false){
-            title = "f"; 
-        } 
-    } 
     if(this.song.title){
-        if(this.audio != null){
-            if(this.audio.paused == false){
-                title = "f "+this.song.title;
-            }
-            else{
-                title = this.song.title;
-            }
-        } 
-        else{
-            title = this.song.title;
-        }
+        title = this.song.title;
     }
     if(this.song.artist){
-        title += " by "+this.song.artist;
+        title += " by " + this.song.artist;
     }
     if(this.pageTitle){
-        title += " - "+this.pageTitle;
+        title += " - " + this.pageTitle;
     }
     this.title = this.replaceHTMLEncoding(title);
     if(this.shouldSetTitle == true){
